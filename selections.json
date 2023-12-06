@@ -1,0 +1,11 @@
+{
+    "Classic Coffee Selections": [
+        {"name": "Americano", "description": "Espresso with hot water, smooth and rich"}
+    ],
+    "Cold Coffee Favorites": [
+        {"name": "Iced Coffee", "description": "Classic brewed coffee served over ice"}
+    ],
+    "Extras": [
+        {"name": "Alternative Milks", "options": ["Soy", "Almond", "Oat", "Coconut"]}
+    ]
+}

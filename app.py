@@ -9,9 +9,9 @@ class Game:
         HEIGHT =  700
         title = "Latte Simulator"
         self.player = Player(0, 0)
-        self.graphics = Graphics(title, WIDTH, HEIGHT)
-        self.player_speed = 10
         self.coffee_machine = CoffeeMachine(85, 300)
+        self.graphics = Graphics(title, WIDTH, HEIGHT, self.player, self.coffee_machine)
+        self.player_speed = 10
 
     def run(self):
         running = True
@@ -23,6 +23,16 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.coffee_machine.get_rect().collidepoint(event.pos):
                         self.graphics.set_mode("CUT_SCREEN")
+
+                    pos = event.pos
+                    for rect, name in self.graphics.clickable_rects:
+                        if rect.collidepoint(pos):
+                            print(f"Clicked on: {name}")
+
+                mouse_pos = pygame.mouse.get_pos()
+                for rect, name in self.graphics.clickable_rects:
+                    if rect.collidepoint(mouse_pos):
+                        self.graphics.draw_outline(rect)
 
                 keys = pygame.key.get_pressed()
                 if keys[pygame.K_d]:
@@ -37,8 +47,6 @@ class Game:
             #graphics
             self.graphics.clear_screen()       
             self.graphics.draw_screen()       
-            self.graphics.draw_player(self.player)  
-            self.graphics.draw_machine(self.coffee_machine)  
             self.graphics.update_screen()      
            
         pygame.quit()
