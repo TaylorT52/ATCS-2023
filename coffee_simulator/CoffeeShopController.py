@@ -36,7 +36,7 @@ class CoffeeShopController:
 
     #**********music**********#
     def handle_music(self, mixer):
-        self.load_and_play_music(mixer, "music/background-sounds.mp3")
+        self.load_and_play_music(mixer, "coffee_simulator/music/background-sounds.mp3")
 
     def load_and_play_music(self, mixer, music_path):
         try:

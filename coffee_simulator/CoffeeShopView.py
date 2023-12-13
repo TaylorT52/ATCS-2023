@@ -22,10 +22,10 @@ class CoffeeShopView:
         }
 
         #load some images: 
-        self.background_image = self.load_image("images/backgrounds/background.png")
-        self.cutscreen = self.load_image("images/backgrounds/cutscreen.png")
-        self.coffee_grinder = self.load_coffee_grinding_images("images/coffee_grinder")
-        self.brewing_images = self.load_brewing_images("images/coffee_machine")
+        self.background_image = self.load_image("coffee_simulator/images/backgrounds/background.png")
+        self.cutscreen = self.load_image("coffee_simulator/images/backgrounds/cutscreen.png")
+        self.coffee_grinder = self.load_coffee_grinding_images("coffee_simulator/images/coffee_grinder")
+        self.brewing_images = self.load_brewing_images("coffee_simulator/images/coffee_machine")
 
         #some of the objects
         self.controller = controller
@@ -117,7 +117,7 @@ class CoffeeShopView:
         self.draw_player()
 
     def draw_machine(self):
-        self.draw_image(self.load_image("images/coffee_machine.png"), 250, 400)
+        self.draw_image(self.load_image("coffee_simulator/images/coffee_machine.png"), 250, 400)
         
     def draw_tool_bar(self):
         self.draw_text("Coffees made: " + str(self.player.coffee_count), 10, 10, color=(0, 0, 0))
@@ -126,20 +126,20 @@ class CoffeeShopView:
 
         heart_x = 430
         for i in range(self.player.lives):
-            self.draw_image(self.load_image("images/heart.png"), heart_x, -3)
+            self.draw_image(self.load_image("coffee_simulator/images/heart.png"), heart_x, -3)
             heart_x += 50
 
     def draw_customer(self, customer_x, customer_y):
-        self.draw_image(self.load_image("images/customers/customer-1.png"), customer_x, customer_y)
-        self.draw_image(self.load_image("images/chat.png"), customer_x, customer_y-50)
+        self.draw_image(self.load_image("coffee_simulator/images/customers/customer-1.png"), customer_x, customer_y)
+        self.draw_image(self.load_image("coffee_simulator/images/chat.png"), customer_x, customer_y-50)
 
     def draw_player(self):
-        self.draw_image(self.load_image("images/player.png"), self.player.x, self.player.y)
+        self.draw_image(self.load_image("coffee_simulator/images/player.png"), self.player.x, self.player.y)
 
     #**********grinding beans**********#
     def grinding_beans(self):
         self.screen.fill((255, 255, 255))
-        self.draw_image(self.load_image("images/backgrounds/basic-background.png"), 0, 50)
+        self.draw_image(self.load_image("coffee_simulator/images/backgrounds/basic-background.png"), 0, 50)
         self.grinding_beans_text()
         self.draw_beans()
         self.draw_drag_line()
