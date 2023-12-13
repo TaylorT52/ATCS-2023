@@ -27,7 +27,8 @@ class CoffeeShopController:
         self.brewing_frame_count = 205
         self.keep_brewing = True
 
-    #init the fsm
+    #**********fsm**********#
+    #init the fsm w/ states and transitions -
     def init_fsm(self):
         self.machine.add_transition(("IDLE"), self.idle, "GRIND_BEANS")
         self.machine.add_transition(("GRIND_BEANS"), self.grind_beans, "BREW")
@@ -59,22 +60,8 @@ class CoffeeShopController:
 
     #mainly for grinding beans - helps move the grinder according to mouse position
     def handle_mouse_position(self, mouse_pos):
-        x = mouse_pos[0]
-        y = mouse_pos[1]
-
-        if self.machine.current_state == "GRIND_BEANS":
-            start = (190, 150)
-            end = (380, 150)
-            line_length = end[0] - start[0]
-
-            segment_length = line_length / 13 
-            relative_x = x - start[0]
-            if 0 <= relative_x <= line_length:
-                self.current_image_index = int(relative_x // segment_length)
-                if self.current_image_index != self.last_image_index and (self.last_image_index < self.current_image_index):
-                    self.last_image_index = self.current_image_index
-            else:
-                self.current_image_index = 0
+        x, y = mouse_pos
+        self.grinding_beans_anim(x, y)
 
     
     #**********FSM methods**********#
@@ -97,28 +84,38 @@ class CoffeeShopController:
     #grinding beans
     def grind_beans(self):
         if self.current_image_index != self.last_image_index:
-            print(self.grind_imgs_thru)
             self.grind_imgs_thru += 1
             self.last_image_index = self.current_image_index
+
+    def grinding_beans_anim(self, x, y):
+        if self.machine.current_state == "GRIND_BEANS":
+            start = (190, 150)
+            end = (380, 150)
+            line_length = end[0] - start[0]
+
+            segment_length = line_length / 13 
+            relative_x = x - start[0]
+            if 0 <= relative_x <= line_length:
+                self.current_image_index = int(relative_x // segment_length)
+                if self.current_image_index != self.last_image_index and (self.last_image_index < self.current_image_index):
+                    self.last_image_index = self.current_image_index
+            else:
+                self.current_image_index = 0
 
     #brewing
     def get_brewing_frame(self):
         return self.brewing_frame
     
-    #keep brewing until go thru entire anation
     def brew(self):
-         if self.machine.current_state == "BREW":
-            if self.brewing_frame < self.brewing_frame_count-1 and self.keep_brewing:
-                self.brewing_frame += 1
-                if self.brewing_frame == 0:
-                    time.sleep(0.1)
-            else:
-                self.brewing_frame = 0
-                self.keep_brewing = False
-                time.sleep(0.5)
-                self.player.coffee_count += 1
-                self.reset()
-
+        if self.machine.current_state == "BREW" and self.brewing_frame < self.brewing_frame_count - 1 and self.keep_brewing:
+            self.brewing_frame += 1
+        else:
+            self.brewing_frame = 0
+            self.keep_brewing = False
+            time.sleep(0.5)  # Consider reducing this sleep duration
+            self.player.coffee_count += 1
+            self.reset()
+            
     #**********checks by state for whether the FSM can move on**********#
     def can_continue_idle(self):
         return self.clicked_box

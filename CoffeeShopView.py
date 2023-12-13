@@ -40,7 +40,7 @@ class CoffeeShopView:
         pygame.display.flip()
         self.clock.tick(60)  
 
-    #**********misc functions**********#
+    #**********misc helper functions**********#
     def clear_screen(self, color=(0, 0, 0)):
         self.screen.fill(color)
 
@@ -49,7 +49,8 @@ class CoffeeShopView:
         text_surface = font.render(text, True, color)
         self.screen.blit(text_surface, (x, y))
 
-    #**********for loading images**********#
+    #**********for loading assets**********#
+    #to help sort loaded images
     def extract_frame_number(self, file_name):
         match = re.search(r'frame_(\d+)_delay', file_name)
         if match:
@@ -58,31 +59,26 @@ class CoffeeShopView:
 
     def load_brewing_images(self, folder_path):
         images = []
-
         for img_file in sorted(os.listdir(folder_path), key=self.extract_frame_number):
             if img_file.endswith('.png'):
                 path = os.path.join(folder_path, img_file)
                 images.append(self.load_image(path)) 
-
         return images
 
     def load_coffee_grinding_images(self, folder_path):
         images = []
-
         def extract_number(file_name):
             parts = file_name.split('-')
             number_part = parts[1] if len(parts) > 1 else '0'
-            number = int(number_part.split('.')[0])  # Extract number and convert to integer
+            number = int(number_part.split('.')[0])  
             return number
-
         for img_file in sorted(os.listdir(folder_path), key=extract_number):
             if img_file.endswith('.png'):
                 path = os.path.join(folder_path, img_file)
                 images.append(self.load_image(path))
-
         return images
 
-    #**********image stuff**********#
+    #**********image loading and drawing helpers**********#
     def load_image(self, path):
         try:
             image = pygame.image.load(path)
@@ -95,7 +91,7 @@ class CoffeeShopView:
         if image:
             self.screen.blit(image, (x, y))
 
-    #**********game over screen**********#
+    #**********game over / win screen**********#
     def display_game_over_screen(self):
         self.clear_screen()
         self.draw_text("Game Over!", 250, 200)
@@ -110,7 +106,7 @@ class CoffeeShopView:
         self.draw_text("Your reward for your superb barista abilities is...", 95, 300)
         self.draw_text("a lifetime of Breville-made coffee, awaiting you every morning!!", 75, 330)
 
-    #**********idle**********#
+    #**********idle state**********#
     def idle(self):
         self.screen.fill((255, 255, 255))
         self.draw_image(self.background_image, 0, 40)
