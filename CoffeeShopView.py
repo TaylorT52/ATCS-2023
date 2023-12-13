@@ -2,6 +2,11 @@ import pygame
 import os
 import re
 
+"""
+author @ taylor - base gpt-generated, but built on me. 
+purpose: manages game's graphics
+"""
+
 class CoffeeShopView:
     def __init__(self, width, height, controller, player):
         pygame.init()
@@ -14,7 +19,6 @@ class CoffeeShopView:
             "IDLE": self.idle, 
             "GRIND_BEANS": self.grinding_beans, 
             "BREW": self.brewing, 
-            "STEAM_MILK": self.steaming_milk
         }
 
         #load some images: 
@@ -30,6 +34,7 @@ class CoffeeShopView:
         pygame.display.set_caption("Latte Simulator")
         self.clock = pygame.time.Clock()
 
+    #**********render whatever you need to render**********#
     def render(self, state):
         self.corresponding[state]()
         pygame.display.flip()
@@ -39,11 +44,12 @@ class CoffeeShopView:
     def clear_screen(self, color=(0, 0, 0)):
         self.screen.fill(color)
 
-    def draw_text(self, text, x, y, font_size=36, color=(255, 255, 255)):
+    def draw_text(self, text, x, y, font_size=24, color=(255, 255, 255)):
         font = pygame.font.Font(None, font_size)
         text_surface = font.render(text, True, color)
         self.screen.blit(text_surface, (x, y))
 
+    #**********for loading images**********#
     def extract_frame_number(self, file_name):
         match = re.search(r'frame_(\d+)_delay', file_name)
         if match:
@@ -89,36 +95,61 @@ class CoffeeShopView:
         if image:
             self.screen.blit(image, (x, y))
 
-    #**********draw by state**********#
+    #**********game over screen**********#
+    def display_game_over_screen(self):
+        self.clear_screen()
+        self.draw_text("Game Over!", 250, 200)
+        self.draw_text("You served: " + str(self.player.cash) + " customer(s)", 200, 260)
+        self.draw_text("Your punishment for subpar barista abilities is...", 85, 300)
+        self.draw_text("condemnation to a lifetime of ONLY Starbucks drip coffee!!", 75, 330)
+
+    def display_win(self):
+        self.clear_screen()
+        self.draw_text("You Win!", 250, 200)
+        self.draw_text("You served: " + str(self.player.cash) + " customer(s)", 200, 260)
+        self.draw_text("Your reward for your superb barista abilities is...", 95, 300)
+        self.draw_text("a lifetime of Breville-made coffee, awaiting you every morning!!", 75, 330)
 
     #**********idle**********#
     def idle(self):
         self.screen.fill((255, 255, 255))
         self.draw_image(self.background_image, 0, 40)
         self.draw_machine()
-        self.draw_cup()
+        self.draw_tool_bar()
         for customer in self.player.customers:
             self.draw_customer(customer.x, customer.y)
 
     def draw_machine(self):
         self.draw_image(self.load_image("images/coffee_machine.png"), 250, 400)
         
-    def draw_cup(self):
-        self.draw_text("Coffees made: " + str(self.player.coffee_count), 50, 5, color=(0, 0, 0))
-        self.draw_text("Customer number: " + str(len(self.player.customers)), 350, 5, color=(0, 0, 0))
+    def draw_tool_bar(self):
+        self.draw_text("Coffees made: " + str(self.player.coffee_count), 10, 10, color=(0, 0, 0))
+        self.draw_text("Customer number: " + str(len(self.player.customers)), 160, 10, color=(0, 0, 0))
+        self.draw_text("Cash: " + str(self.player.cash), 350, 10, color=(0, 0, 0))
+
+        heart_x = 430
+        for i in range(self.player.lives):
+            self.draw_image(self.load_image("images/heart.png"), heart_x, -3)
+            heart_x += 50
 
     def draw_customer(self, customer_x, customer_y):
         self.draw_image(self.load_image("images/customers/customer-1.png"), customer_x, customer_y)
+        self.draw_image(self.load_image("images/chat.png"), customer_x, customer_y-50)
 
     #**********grinding beans**********#
     def grinding_beans(self):
         self.screen.fill((255, 255, 255))
-        self.draw_text("grinding beans", 50, 50, color=(0, 0, 0))
+        self.draw_image(self.load_image("images/backgrounds/basic-background.png"), 0, 50)
+        self.grinding_beans_text()
         self.draw_beans()
         self.draw_drag_line()
 
+    def grinding_beans_text(self):
+        self.draw_text("Grinding beans", 20, 10, color=(0, 0, 0))
+        self.draw_text(str(self.controller.grind_imgs_thru) + "/" + str(self.controller.grind_imgs_threshold) + " beans", 250, 10, color=(0, 0, 0))
+
     def draw_beans(self):
-        self.draw_image(self.coffee_grinder[self.controller.get_current_image()], -50, 0)
+        self.draw_image(self.coffee_grinder[self.controller.get_current_image()], -50, 70)
 
     def draw_drag_line(self):
         pygame.draw.line(self.screen, (255, 0, 0), (190, 150), (380, 150))
@@ -128,11 +159,10 @@ class CoffeeShopView:
         self.screen.fill((255, 255, 255))
         self.draw_text("brewing coffee", 50, 50, color=(0, 0, 0))
         self.draw_brewing()
+        self.brewing_text()
+
+    def brewing_text(self):
+        self.draw_text("Brewing!", 20, 10, color=(0, 0, 0))
 
     def draw_brewing(self):
-        self.draw_image(self.brewing_images[self.controller.get_brewing_frame()], 0, 0)
-
-    #**********steaming milk**********#
-    def steaming_milk(self):
-        self.screen.fill((255, 255, 255))
-        self.draw_text("steaming milk", 50, 50, color=(0, 0, 0))
+        self.draw_image(self.brewing_images[self.controller.get_brewing_frame()], 0, 50)

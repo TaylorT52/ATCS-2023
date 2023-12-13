@@ -1,5 +1,9 @@
-import Order
 import pygame
+
+"""
+author @ taylor 
+purpose: keeps track of customer location, can get rect for clicking
+"""
 
 class Customer:
     def __init__(self, name, x, y):
@@ -9,9 +13,6 @@ class Customer:
         self.y = y
         self.width = 50
         self.height = 50
-
-    def place_order(self, coffee_type):
-        self.order = Order(coffee_type)
 
     def get_customer_rect(self):
         return pygame.Rect(self.x, self.y, self.width, self.height)
