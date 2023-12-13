@@ -21,11 +21,14 @@ class App:
         self.WIN = False
         self.running = True
         self.PLAYER_TO_WIN = 2
+        self.MAX_CUSTOMERS = 3
         self.spawn_rate = 10000
+
         #objetcts
-        self.player = Player(10, 10)
+        self.player = Player(190, 420, self.MAX_CUSTOMERS)
         self.controller = CoffeeShopController(self.player)
         self.graphics = CoffeeShopView(self.WIDTH, self.HEIGHT, self.controller, self.player)
+        
         #init stuff, timers... 
         self.controller.init_fsm()
         self.SPAWN_CUSTOMER_EVENT = pygame.USEREVENT + 1

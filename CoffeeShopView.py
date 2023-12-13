@@ -118,6 +118,7 @@ class CoffeeShopView:
         self.draw_tool_bar()
         for customer in self.player.customers:
             self.draw_customer(customer.x, customer.y)
+        self.draw_player()
 
     def draw_machine(self):
         self.draw_image(self.load_image("images/coffee_machine.png"), 250, 400)
@@ -135,6 +136,9 @@ class CoffeeShopView:
     def draw_customer(self, customer_x, customer_y):
         self.draw_image(self.load_image("images/customers/customer-1.png"), customer_x, customer_y)
         self.draw_image(self.load_image("images/chat.png"), customer_x, customer_y-50)
+
+    def draw_player(self):
+        self.draw_image(self.load_image("images/player.png"), self.player.x, self.player.y)
 
     #**********grinding beans**********#
     def grinding_beans(self):
